@@ -7,12 +7,14 @@ import "../styles/Countries.css";
 
 function Countries() {
   const [countries, setCountries] = React.useState([]);
-  if (!countries.length) {
-    axios.get("http://localhost:3000/countries").then((res) => {
+
+  React.useEffect(() => {
+    axios.get("https://restcountries.com/v3.1/all").then((res) => {
       console.log(res);
       setCountries(res.data);
     });
-  }
+  }, []); // Добавлен пустой массив зависимостей для выполнения запроса только один раз при монтировании компонента
+
   return (
     <Table striped bordered hover className={"countries"}>
       <thead>
@@ -26,12 +28,12 @@ function Countries() {
         {countries.map((country) =>
           country.capital ? (
             <Country
-              key={country.code}
-              name={country.name}
+              key={country.cca3}
+              name={country.name.common}
               capital={country.capital}
             />
           ) : (
-            <Country key={country.code} name={country.name} />
+            <Country key={country.cca3} name={country.name.common} />
           )
         )}
       </tbody>
